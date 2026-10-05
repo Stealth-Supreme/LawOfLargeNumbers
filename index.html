@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Lab | Experimental Convergence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1 id="logo" style="cursor: pointer;">Law of Large Number</h1>
+        <nav class="nav-controls">
+            <button id="home-btn" class="btn-secondary hidden">← Back to Experiments</button>
+            <div id="header-exp-info" class="control-group hidden">
+                <span id="header-exp-name" style="color: var(--accent); font-weight: 700;"></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HOMEPAGE VIEW -->
+    <section id="home-view" class="homepage page-view">
+        <div class="hero-section">
+            <h2>Explore Randomness</h2>
+            <p>Choose an experiment to observe how experimental probability converges toward theoretical truth as trial counts increase.</p>
+        </div>
+        <div class="experiment-grid">
+            <!-- Coin Toss Card -->
+            <div class="exp-card" data-exp="coin" role="button" tabindex="0">
+                <div class="icon">🪙</div>
+                <h3>Coin Toss</h3>
+                <p class="desc">A classic binary trial: Heads or Tails.</p>
+                <div class="concept">P(H)=0.5 | P(T)=0.5</div>
+                <button class="start-btn">Start</button>
+            </div>
+            <!-- Dice Roll Card -->
+            <div class="exp-card" data-exp="dice" role="button" tabindex="0">
+                <div class="icon">🎲</div>
+                <h3>Dice Roll</h3>
+                <p class="desc">Single roll of a fair six-sided die.</p>
+                <div class="concept">P(x) ≈ 0.1667</div>
+                <button class="start-btn">Start</button>
+            </div>
+            <!-- 2 Dice Sum Card -->
+            <div class="exp-card" data-exp="twoDice" role="button" tabindex="0">
+                <div class="icon">🎰</div>
+                <h3>2 Dice Sum</h3>
+                <p class="desc">The sum of two independent dice rolls.</p>
+                <div class="concept">Non-Uniform Distribution</div>
+                <button class="start-btn">Start</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIMULATOR VIEW -->
+    <section id="sim-view" class="app-container page-view hidden">
+        <!-- LEFT AREA: Controls and Graph -->
+        <div class="main-area">
+            <div class="graph-controls">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="track-selector-label">Outcomes to display:</label>
+                        <div id="track-selector" class="track-selector">
+                            <!-- Dynamic outcome toggles -->
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <input type="checkbox" id="show-theo-checkbox" checked>
+                        <label for="show-theo-checkbox">Show theoretical lines</label>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="mode-select">Mode:</label>
+                        <select id="mode-select">
+                            <option value="manual">Manual</option>
+                            <option value="automatic">Automatic</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="axis-mode-select">X-Axis:</label>
+                        <select id="axis-mode-select">
+                            <option value="linear">Linear</option>
+                            <option value="log">Logarithmic</option>
+                        </select>
+                    </div>
+                    <div id="prob-sum-indicator" class="prob-sum">
+                        Tracked probability sum: 1.000
+                    </div>
+                </div>
+            </div>
+
+            <div id="graph-container" class="graph-wrapper">
+                <!-- SVG Graph injected here -->
+            </div>
+
+            <div id="graph-explanation" class="graph-explanation">
+                <!-- Dynamic explanation -->
+            </div>
+        </div>
+
+        <!-- RIGHT AREA: Results and Stats -->
+        <aside class="side-area">
+            <div class="result-card">
+                <div class="result-label">Latest Result</div>
+                <div id="latest-result-box" class="result-display" aria-live="polite">
+                    <div class="result-symbol">—</div>
+                    <div class="result-text">No result yet</div>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <h3>Statistics</h3>
+                <div class="stat-row main-stat">
+                    <span class="label">Total Trials:</span>
+                    <span id="total-trials-val" class="value">0</span>
+                </div>
+                <div id="outcome-stats" class="outcome-stats">
+                    <!-- Dynamic outcome stats -->
+                </div>
+            </div>
+
+            <div class="counts-card">
+                <h3>Counts Table</h3>
+                <div class="table-wrapper">
+                    <table id="counts-table">
+                        <thead>
+                            <tr>
+                                <th>Outcome</th>
+                                <th>Count</th>
+                                <th>Exp %</th>
+                                <th>Theo %</th>
+                                <th>Diff</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="auto-controls" class="auto-controls hidden">
+                <h3>Automatic Mode</h3>
+                <div class="slider-group">
+                    <label for="speed-slider">Simulation Speed:</label>
+                    <input type="range" id="speed-slider" min="10" max="2000" value="100">
+                    <div class="slider-info">
+                        <span id="interval-ms">100 ms</span>
+                        <span id="trials-per-sec">10 trials/s</span>
+                    </div>
+                </div>
+                <button id="start-stop-btn" class="btn-primary">Start</button>
+            </div>
+
+            <div id="manual-controls" class="manual-controls">
+                <button id="primary-action-btn" class="btn-primary btn-large">Toss Coin</button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- MODAL -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="modal-message">Discard current experiment data?</p>
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn-secondary">Cancel</button>
+                <button id="modal-confirm" class="btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
